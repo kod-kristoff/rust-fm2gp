@@ -23,13 +23,10 @@ pub fn power_recursive(x: i32, n: i32) -> i32 {
 
 }
 
-pub fn power_accumulate(r: i32, x: i32, n: i32) -> i32 {
+pub fn power_accumulate(mut r: i32, mut x: i32, mut n: i32) -> i32 {
 	if n == 0 {
 		return r
 	}
-	let mut r = r;
-	let mut x = x;
-	let mut n = n;
 	loop {
 		if is_odd(n) {
 			r = r * x;
@@ -60,8 +57,10 @@ mod tests {
 
     #[test]
 	fn power_accumulate_i32_n0() {
+		let r = 1;
 		assert_eq!(power_accumulate(1, 2i32, 0), 1);
-		assert_eq!(power_accumulate(1, 2, 1), 2);
+		assert_eq!(power_accumulate(r, 2, 1), 2);
+		assert_eq!(r, 1);
 		assert_eq!(power_accumulate(1, 2, 2), 4);
 		assert_eq!(power_accumulate(1, 2, 3), 8);
 		assert_eq!(power_accumulate(1, 2, 4), 16);
