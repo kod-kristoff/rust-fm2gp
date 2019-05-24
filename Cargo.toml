@@ -1,14 +1,14 @@
 [package]
-name = "rust-eop"
+name = "fm2gp"
 version = "0.1.0"
 authors = ["Kristoffer Andersson <kode.kristoff@gmail.com>"]
 
 [lib]
-name = "eop"
+name = "fm2gp"
 path = "src/lib.rs"
 
 [[bin]]
-name = "eop-tests"
+name = "fm2gp-tests"
 path = "src/main.rs"
 
 [dependencies]
