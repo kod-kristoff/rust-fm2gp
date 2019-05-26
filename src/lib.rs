@@ -23,12 +23,13 @@ pub fn power_recursive(x: i32, n: i32) -> i32 {
 
 }
 
-pub fn power_accumulate(
-        mut r: i32,
-        mut x: i32, 
+pub fn power_accumulate<T>(
+        mut r: T,
+        mut x: T, 
         mut n: i32,
-        op: impl Fn(i32, i32) -> i32
-    ) -> i32 {
+        op: impl Fn(T, T) -> T
+    ) -> T
+{
 	if n == 0 {
 		return r
 	}
@@ -43,6 +44,10 @@ pub fn power_accumulate(
 		x = op(x, x);
 	}
 }
+
+//pub fn power_semigroup(
+//        mut x: i32
+//                      )
 
 #[cfg(test)]
 mod tests {
