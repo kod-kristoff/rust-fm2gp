@@ -29,6 +29,7 @@ pub fn power_accumulate<T>(
         mut n: i32,
         op: impl Fn(T, T) -> T
     ) -> T
+    where T: Copy
 {
 	if n == 0 {
 		return r
