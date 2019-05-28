@@ -73,9 +73,9 @@ mod tests {
     use is_odd;
     use std::ops::Mul;
 
-   // fn mul<T>(x: T, y: T) -> T
-   //     where T: Copy + Mul
-    fn mul(x: i32, y: i32) -> i32
+    fn mul<T>(x: T, y: T) -> T
+        where T: Copy + Mul<Output = T>
+    //fn mul(x: i32, y: i32) -> i32
     {
         x * y
     }
@@ -104,6 +104,14 @@ mod tests {
 		assert_eq!(power_semigroup(3, 2, mul), 9);
 		assert_eq!(power_semigroup(3, 3, mul), 27);
 		assert_eq!(power_semigroup(3, 4, mul), 81);
+	}
+
+    #[test]
+	fn power_semigroup_lambda_f64() {
+		assert_eq!(power_semigroup(3.0, 1, |a, b| a + b), 3.0);
+		assert_eq!(power_semigroup(3.0, 2, mul), 9.0);
+		assert_eq!(power_semigroup(3.0, 3, |a, b| a * b), 27.0);
+		assert_eq!(power_semigroup(3.0, 4, mul), 81.0);
 	}
 
     #[test]
