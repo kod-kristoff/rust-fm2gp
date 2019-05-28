@@ -46,18 +46,37 @@ pub fn power_accumulate<T>(
 	}
 }
 
-//pub fn power_semigroup(
-//        mut x: i32
+pub fn power_semigroup<T>(
+        mut x: T,
+        mut n: i32,
+        op: impl Fn(T, T) -> T
+    ) -> T
+    where T: Copy
+{
+    while !is_odd(n) {
+        x = op(x, x);
+        n = half(n);
+    }
+    if n == 1 {
+        return x
+    }
+    power_accumulate(x, op(x, x), half(n-1), op)
+}
 //                      )
 
 #[cfg(test)]
 mod tests {
 	use power_accumulate;
 	use power_recursive;
+	use power_semigroup;
     use half;
     use is_odd;
+    use std::ops::Mul;
 
-    fn mul(x: i32, y: i32) -> i32 {
+   // fn mul<T>(x: T, y: T) -> T
+   //     where T: Copy + Mul
+    fn mul(x: i32, y: i32) -> i32
+    {
         x * y
     }
 
@@ -77,6 +96,14 @@ mod tests {
 		assert_eq!(power_accumulate(1, 2, 2, mul), 4);
 		assert_eq!(power_accumulate(1, 2, 3, mul), 8);
 		assert_eq!(power_accumulate(1, 2, 4, mul), 16);
+	}
+
+    #[test]
+	fn power_semigroup_i32_n0() {
+		assert_eq!(power_semigroup(3, 1, mul), 3);
+		assert_eq!(power_semigroup(3, 2, mul), 9);
+		assert_eq!(power_semigroup(3, 3, mul), 27);
+		assert_eq!(power_semigroup(3, 4, mul), 81);
 	}
 
     #[test]
