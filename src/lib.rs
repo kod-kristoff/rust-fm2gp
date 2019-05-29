@@ -23,19 +23,24 @@ pub fn power_recursive(x: i32, n: i32) -> i32 {
 
 }
 
-pub fn power_accumulate(mut r: i32, mut x: i32, mut n: i32) -> i32 {
+pub fn power_accumulate(
+        mut r: i32,
+        mut x: i32,
+        mut n: i32,
+        op: impl Fn(i32, i32) -> i32
+    ) -> i32 {
 	if n == 0 {
 		return r
 	}
 	loop {
 		if is_odd(n) {
-			r = r * x;
+			r = op(r, x);
 			if n == 1 {
 				return r
 			}
 		}
 		n = half(n);
-		x = x * x;
+		x = op(x, x);
 	}
 }
 
@@ -45,6 +50,10 @@ mod tests {
 	use power_recursive;
     use half;
     use is_odd;
+
+    fn mul(x: i32, y: i32) -> i32 {
+        x * y
+    }
 
 	#[test]
 	fn power_recursive_i32_n0() {
@@ -57,13 +66,11 @@ mod tests {
 
     #[test]
 	fn power_accumulate_i32_n0() {
-		let r = 1;
-		assert_eq!(power_accumulate(1, 2i32, 0), 1);
-		assert_eq!(power_accumulate(r, 2, 1), 2);
-		assert_eq!(r, 1);
-		assert_eq!(power_accumulate(1, 2, 2), 4);
-		assert_eq!(power_accumulate(1, 2, 3), 8);
-		assert_eq!(power_accumulate(1, 2, 4), 16);
+		assert_eq!(power_accumulate(1, 2i32, 0, mul), 1);
+		assert_eq!(power_accumulate(1, 2, 1, mul), 2);
+		assert_eq!(power_accumulate(1, 2, 2, mul), 4);
+		assert_eq!(power_accumulate(1, 2, 3, mul), 8);
+		assert_eq!(power_accumulate(1, 2, 4, mul), 16);
 	}
 
     #[test]
