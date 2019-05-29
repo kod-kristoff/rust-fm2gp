@@ -25,7 +25,7 @@ pub fn power_recursive(x: i32, n: i32) -> i32 {
 
 pub fn power_accumulate<T>(
         mut r: T,
-        mut x: T, 
+        mut x: T,
         mut n: i32,
         op: impl Fn(T, T) -> T
     ) -> T
@@ -62,7 +62,6 @@ pub fn power_semigroup<T>(
     }
     power_accumulate(x, op(x, x), half(n-1), op)
 }
-//                      )
 
 #[cfg(test)]
 mod tests {
@@ -75,7 +74,6 @@ mod tests {
 
     fn mul<T>(x: T, y: T) -> T
         where T: Copy + Mul<Output = T>
-    //fn mul(x: i32, y: i32) -> i32
     {
         x * y
     }
