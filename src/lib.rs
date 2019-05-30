@@ -1,6 +1,24 @@
-#[inline]
-pub fn half(n: i32) -> i32 {
-    n >> 1
+extern crate num_integer;
+
+pub mod integer {
+    use num_integer::Integer;
+
+    #[inline(always)]
+    pub fn half<N>(n: N) -> N
+        where N: Integer
+    {
+        n >> 1
+    }
+
+    #[cfg(test)]
+    mod tests {
+        #[test]
+        fn test_half() {
+            assert_eq!(half(2), 1);
+            assert_eq!(half(3), 1);
+            assert_eq!(half(7), 3);
+        }
+    }
 }
 
 #[inline]
@@ -41,7 +59,7 @@ pub fn power_accumulate<T>(
 				return r
 			}
 		}
-		n = half(n);
+		n = integer::half(n);
 		x = op(x, x);
 	}
 }
@@ -55,12 +73,12 @@ pub fn power_semigroup<T>(
 {
     while !is_odd(n) {
         x = op(x, x);
-        n = half(n);
+        n = integer::half(n);
     }
     if n == 1 {
         return x
     }
-    power_accumulate(x, op(x, x), half(n-1), op)
+    power_accumulate(x, op(x, x), integer::half(n-1), op)
 }
 
 #[cfg(test)]
@@ -68,7 +86,6 @@ mod tests {
 	use power_accumulate;
 	use power_recursive;
 	use power_semigroup;
-    use half;
     use is_odd;
     use std::ops::Mul;
 
@@ -112,12 +129,6 @@ mod tests {
 		assert_eq!(power_semigroup(3.0, 4, mul), 81.0);
 	}
 
-    #[test]
-    fn test_half() {
-        assert_eq!(half(2), 1);
-        assert_eq!(half(3), 1);
-        assert_eq!(half(7), 3);
-    }
 
     #[test]
     fn test_is_odd() {

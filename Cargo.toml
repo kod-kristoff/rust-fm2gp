@@ -12,3 +12,4 @@ name = "fm2gp-tests"
 path = "src/main.rs"
 
 [dependencies]
+num-integer = "0.1"
