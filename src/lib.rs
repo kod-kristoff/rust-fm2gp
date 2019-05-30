@@ -1,17 +1,19 @@
 extern crate num_integer;
 
 pub mod integer {
-    use num_integer::Integer;
+    use std::ops::Shr;
 
     #[inline(always)]
     pub fn half<N>(n: N) -> N
-        where N: Integer
+        where N: Shr
     {
         n >> 1
     }
 
     #[cfg(test)]
     mod tests {
+        use half;
+
         #[test]
         fn test_half() {
             assert_eq!(half(2), 1);
