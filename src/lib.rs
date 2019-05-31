@@ -1,6 +1,10 @@
 extern crate num_integer;
 extern crate num_traits;
 
+pub mod ops;
+
+//pub use crate::ops::ops;
+
 pub mod integer {
     //use std::ops::Shr;
     use num_traits::int::PrimInt;
@@ -27,16 +31,16 @@ pub mod integer {
 }
 
 pub mod power {
+    use crate::integer;
+    use num_integer::Integer;
     use num_traits::identities::One;
     use num_traits::int::PrimInt;
-    use num_integer::Integer;
     use std::ops::Mul;
-    use crate::integer;
 
     pub fn power_recursive<T, I>(x: T, n: I) -> T
-        where
-            T: Mul<Output = T> + One + Copy,
-            I: Integer + PrimInt
+    where
+        T: Mul<Output = T> + One + Copy,
+        I: Integer + PrimInt,
     {
         if n.is_zero() {
             T::one()
@@ -74,7 +78,7 @@ pub mod power {
     pub fn power_semigroup<T, I>(mut x: T, mut n: I, op: impl Fn(T, T) -> T) -> T
     where
         T: Copy,
-        I: Integer + PrimInt
+        I: Integer + PrimInt,
     {
         while n.is_even() {
             x = op(x, x);
@@ -86,53 +90,72 @@ pub mod power {
         power_accumulate(x, op(x, x), integer::half(n - I::one()), op)
     }
 
-    #[cfg(test)]
-    mod tests {
-        use power::power_accumulate;
-        use power::power_recursive;
-        use power::power_semigroup;
-        use std::ops::Mul;
+    macro_rules! tests_impl {
+        ($T:ty, $I:ty, $test_mod:ident) => {
+            #[cfg(test)]
+            mod $test_mod {
+                use power::power_accumulate;
+                use power::power_recursive;
+                use power::power_semigroup;
+                use crate::ops;
 
-        fn mul<T>(x: T, y: T) -> T
-        where
-            T: Copy + Mul<Output = T>,
-        {
-            x * y
-        }
+                #[test]
+                fn power_recursive_tests() {
+                    assert_eq!(power_recursive(2 as $T, 0 as $I), 1 as $T);
+                    assert_eq!(power_recursive(2 as $T, 1 as $I), 2 as $T);
+                    assert_eq!(power_recursive(2 as $T, 2 as $I), 4 as $T);
+                    assert_eq!(power_recursive(2 as $T, 3 as $I), 8 as $T);
+                    assert_eq!(power_recursive(2 as $T, 4 as $I), 16 as $T);
+                }
 
-        #[test]
-        fn power_recursive_i32_n0() {
-            assert_eq!(power_recursive(2i32, 0), 1);
-            assert_eq!(power_recursive(2, 1), 2);
-            assert_eq!(power_recursive(2, 2), 4);
-            assert_eq!(power_recursive(2, 3), 8);
-            assert_eq!(power_recursive(2, 4), 16);
-        }
+                #[test]
+                fn power_accumulate_mul() {
+                    assert_eq!(power_accumulate(1 as $T, 2 as $T, 0 as $I, ops::mul), 1 as $T);
+                    assert_eq!(power_accumulate(1 as $T, 2 as $T, 1 as $I, ops::mul), 2 as $T);
+                    assert_eq!(power_accumulate(1 as $T, 2 as $T, 2 as $I, ops::mul), 4 as $T);
+                    assert_eq!(power_accumulate(1 as $T, 2 as $T, 3 as $I, ops::mul), 8 as $T);
+                    assert_eq!(power_accumulate(1 as $T, 2 as $T, 4 as $I, ops::mul), 16 as $T);
+                }
 
-        #[test]
-        fn power_accumulate_i32_n0() {
-            assert_eq!(power_accumulate(1, 2i32, 0, mul), 1);
-            assert_eq!(power_accumulate(1, 2, 1, mul), 2);
-            assert_eq!(power_accumulate(1, 2, 2, mul), 4);
-            assert_eq!(power_accumulate(1, 2, 3, mul), 8);
-            assert_eq!(power_accumulate(1, 2, 4, mul), 16);
-        }
+                #[test]
+                fn power_semigroup_mul() {
+                    assert_eq!(power_semigroup(3 as $T, 1 as $I, ops::mul), 3 as $T);
+                    assert_eq!(power_semigroup(3 as $T, 2 as $I, ops::mul), 9 as $T);
+                    assert_eq!(power_semigroup(3 as $T, 3 as $I, ops::mul), 27 as $T);
+                    assert_eq!(power_semigroup(3 as $T, 4 as $I, ops::mul), 81 as $T);
+                }
+                
+                #[test]
+                fn power_semigroup_add() {
+                    assert_eq!(power_semigroup(3 as $T, 1 as $I, ops::add), 3 as $T);
+                    assert_eq!(power_semigroup(3 as $T, 2 as $I, ops::add), 6 as $T);
+                    assert_eq!(power_semigroup(3 as $T, 3 as $I, ops::add), 9 as $T);
+                    assert_eq!(power_semigroup(3 as $T, 4 as $I, ops::add), 12 as $T);
+                }
 
-        #[test]
-        fn power_semigroup_i32_n0() {
-            assert_eq!(power_semigroup(3, 1, mul), 3);
-            assert_eq!(power_semigroup(3, 2, mul), 9);
-            assert_eq!(power_semigroup(3, 3, mul), 27);
-            assert_eq!(power_semigroup(3, 4, mul), 81);
-        }
+                #[test]
+                fn power_semigroup_lambda_add() {
+                    assert_eq!(power_semigroup(3 as $T, 1 as $I, |a, b| a + b), 3 as $T);
+                    assert_eq!(power_semigroup(3 as $T, 2 as $I, |a, b| a + b), 6 as $T);
+                    assert_eq!(power_semigroup(3 as $T, 3 as $I, |a, b| a + b), 9 as $T);
+                    assert_eq!(power_semigroup(3 as $T, 4 as $I, |a, b| a + b), 12 as $T);
+                }
 
-        #[test]
-        fn power_semigroup_lambda_f64() {
-            assert_eq!(power_semigroup(3.0, 1, |a, b| a + b), 3.0);
-            assert_eq!(power_semigroup(3.0, 2, mul), 9.0);
-            assert_eq!(power_semigroup(3.0, 3, |a, b| a * b), 27.0);
-            assert_eq!(power_semigroup(3.0, 4, mul), 81.0);
-        }
-
+                #[test]
+                fn power_semigroup_lambda_mul() {
+                    assert_eq!(power_semigroup(3 as $T, 1 as $I, |a, b| a * b), 3 as $T);
+                    assert_eq!(power_semigroup(3 as $T, 2 as $I, |a, b| a * b), 9 as $T);
+                    assert_eq!(power_semigroup(3 as $T, 3 as $I, |a, b| a * b), 27 as $T);
+                    assert_eq!(power_semigroup(3 as $T, 4 as $I, |a, b| a * b), 81 as $T);
+                }
+            }
+        };
     }
+
+    tests_impl!(f32, i8,    tests_f32_i8);
+    tests_impl!(f64, u32,   tests_f64_u32);
+    tests_impl!(i16, i8,    tests_i16_i8);
+    tests_impl!(i32, u16,   tests_i32_u16);
+    tests_impl!(u64, i32,   tests_u64_i32);
+    tests_impl!(u32, u64,   tests_u32_u64);
 }
