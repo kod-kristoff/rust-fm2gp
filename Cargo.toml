@@ -1,6 +1,6 @@
 [package]
 name = "fm2gp"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Kristoffer Andersson <kode.kristoff@gmail.com>"]
 
 [lib]
@@ -13,3 +13,4 @@ path = "src/main.rs"
 
 [dependencies]
 num-integer = "0.1"
+num-traits = "0.2"
