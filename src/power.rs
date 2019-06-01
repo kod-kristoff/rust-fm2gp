@@ -1,5 +1,6 @@
 
 use crate::integer;
+use crate::traits::Monoid;
 use num_integer::Integer;
 use num_traits::identities::One;
 use num_traits::int::PrimInt;
@@ -56,6 +57,20 @@ where
         return x;
     }
     power_accumulate(x, op(x, x), integer::half(n - I::one()), op)
+}
+
+//pub fn power_monoid<M, I, Op>(x: T, n: I, op: Op) -> 
+
+pub fn power_monoid<T, I, M>(x: T, n: I, m: M) -> T
+    where
+        T: Copy,
+        I: Integer + PrimInt,
+        M: Monoid<T>
+{
+    if n.is_zero() {
+        return m.identity_element();
+    }
+    power_semigroup(x, n, m.op())
 }
 
 macro_rules! tests_impl {
@@ -141,3 +156,14 @@ tests_impl!(i16, i8, tests_i16_i8);
 tests_impl!(i32, u16, tests_i32_u16);
 tests_impl!(u64, i32, tests_u64_i32);
 tests_impl!(u32, u64, tests_u32_u64);
+
+#[cfg(test)]
+mod tests {
+    use power::power_monoid;
+    use crate::ops::mult;
+
+    #[test]
+    fn power_monoid_tests() {
+        assert_eq!(power_monoid(2, 0, mult::<i32>()), 1)
+    }
+}
