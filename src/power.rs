@@ -156,6 +156,15 @@ macro_rules! tests_impl {
                 assert_eq!(power_monoid(5 as $T, 3 as $I, ops::mult::<$T>()), 125 as $T);
                 assert_eq!(power_monoid(6 as $T, 4 as $I, ops::mult::<$T>()), 1296 as $T);
             }
+            
+            #[test]
+            fn power_monoid_madd_tests() {
+                assert_eq!(power_monoid(2 as $T, 0 as $I, ops::madd::<$T>()), 0 as $T);
+                assert_eq!(power_monoid(3 as $T, 1 as $I, ops::madd::<$T>()), 3 as $T);
+                assert_eq!(power_monoid(4 as $T, 2 as $I, ops::madd::<$T>()), 8 as $T);
+                assert_eq!(power_monoid(5 as $T, 3 as $I, ops::madd::<$T>()), 15 as $T);
+                assert_eq!(power_monoid(6 as $T, 4 as $I, ops::madd::<$T>()), 24 as $T);
+            }
         }
     };
 }
