@@ -151,6 +151,10 @@ macro_rules! tests_impl {
             #[test]
             fn power_monoid_mult_tests() {
                 assert_eq!(power_monoid(2 as $T, 0 as $I, ops::mult::<$T>()), 1 as $T);
+                assert_eq!(power_monoid(3 as $T, 1 as $I, ops::mult::<$T>()), 3 as $T);
+                assert_eq!(power_monoid(4 as $T, 2 as $I, ops::mult::<$T>()), 16 as $T);
+                assert_eq!(power_monoid(5 as $T, 3 as $I, ops::mult::<$T>()), 125 as $T);
+                assert_eq!(power_monoid(6 as $T, 4 as $I, ops::mult::<$T>()), 1296 as $T);
             }
         }
     };
@@ -163,13 +167,3 @@ tests_impl!(i32, u16, tests_i32_u16);
 tests_impl!(u64, i32, tests_u64_i32);
 tests_impl!(u32, u64, tests_u32_u64);
 
-#[cfg(test)]
-mod tests {
-    use power::power_monoid;
-    use crate::ops::mult;
-
-    #[test]
-    fn power_monoid_tests() {
-        assert_eq!(power_monoid(2, 0, mult::<i32>()), 1)
-    }
-}
