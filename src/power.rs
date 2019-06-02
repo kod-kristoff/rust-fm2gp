@@ -81,6 +81,7 @@ macro_rules! tests_impl {
             use power::power_accumulate;
             use power::power_recursive;
             use power::power_semigroup;
+            use power::power_monoid;
 
             #[test]
             fn power_recursive_tests() {
@@ -145,6 +146,11 @@ macro_rules! tests_impl {
                 assert_eq!(power_semigroup(3 as $T, 2 as $I, |a, b| a * b), 9 as $T);
                 assert_eq!(power_semigroup(3 as $T, 3 as $I, |a, b| a * b), 27 as $T);
                 assert_eq!(power_semigroup(3 as $T, 4 as $I, |a, b| a * b), 81 as $T);
+            }
+
+            #[test]
+            fn power_monoid_mult_tests() {
+                assert_eq!(power_monoid(2 as $T, 0 as $I, ops::mult::<$T>()), 1 as $T);
             }
         }
     };
