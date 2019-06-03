@@ -4,6 +4,7 @@ extern crate num_traits;
 pub mod ops;
 pub mod power;
 pub mod traits;
+pub mod matrix;
 //pub use crate::ops::ops;
 
 pub mod integer {
