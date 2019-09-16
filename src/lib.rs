@@ -108,11 +108,26 @@ pub mod power {
 
                 #[test]
                 fn power_accumulate_mul() {
-                    assert_eq!(power_accumulate(1 as $T, 2 as $T, 0 as $I, ops::mul), 1 as $T);
-                    assert_eq!(power_accumulate(1 as $T, 2 as $T, 1 as $I, ops::mul), 2 as $T);
-                    assert_eq!(power_accumulate(1 as $T, 2 as $T, 2 as $I, ops::mul), 4 as $T);
-                    assert_eq!(power_accumulate(1 as $T, 2 as $T, 3 as $I, ops::mul), 8 as $T);
-                    assert_eq!(power_accumulate(1 as $T, 2 as $T, 4 as $I, ops::mul), 16 as $T);
+                    assert_eq!(
+						power_accumulate(1 as $T, 2 as $T, 0 as $I, ops::mul),
+						1 as $T
+					);
+                    assert_eq!(
+						power_accumulate(1 as $T, 2 as $T, 1 as $I, ops::mul),
+						2 as $T
+					);
+                    assert_eq!(
+						power_accumulate(1 as $T, 2 as $T, 2 as $I, ops::mul),
+						4 as $T
+					);
+                    assert_eq!(
+						power_accumulate(1 as $T, 2 as $T, 3 as $I, ops::mul),
+						8 as $T
+					);
+                    assert_eq!(
+						power_accumulate(1 as $T, 2 as $T, 4 as $I, ops::mul),
+						16 as $T
+					);
                 }
 
                 #[test]
@@ -150,10 +165,10 @@ pub mod power {
         };
     }
 
-    tests_impl!(f32, i8,    tests_f32_i8);
-    tests_impl!(f64, u32,   tests_f64_u32);
-    tests_impl!(i16, i8,    tests_i16_i8);
-    tests_impl!(i32, u16,   tests_i32_u16);
-    tests_impl!(u64, i32,   tests_u64_i32);
-    tests_impl!(u32, u64,   tests_u32_u64);
+    tests_impl!(f32, i8, tests_f32_i8);
+    tests_impl!(f64, u32, tests_f64_u32);
+    tests_impl!(i16, i8, tests_i16_i8);
+    tests_impl!(i32, u16, tests_i32_u16);
+    tests_impl!(u64, i32, tests_u64_i32);
+    tests_impl!(u32, u64, tests_u32_u64);
 }
