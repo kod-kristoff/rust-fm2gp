@@ -92,10 +92,10 @@ pub mod power {
         ($T:ty, $I:ty, $test_mod:ident) => {
             #[cfg(test)]
             mod $test_mod {
+                use crate::ops;
                 use power::power_accumulate;
                 use power::power_recursive;
                 use power::power_semigroup;
-                use crate::ops;
 
                 #[test]
                 fn power_recursive_tests() {
