@@ -46,12 +46,10 @@ pub mod power {
             T::one()
         } else if n.is_one() {
             x
+        } else if n.is_odd() {
+            x * power_recursive(x * x, integer::half(n))
         } else {
-            if n.is_odd() {
-                x * power_recursive(x * x, integer::half(n))
-            } else {
-                power_recursive(x * x, integer::half(n))
-            }
+            power_recursive(x * x, integer::half(n))
         }
     }
 
